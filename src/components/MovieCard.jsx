@@ -1,28 +1,15 @@
-import { useState, useEffect } from "react";
-import {
-  isFavorite,
-  saveFavorite,
-  removeFavorite,
-} from "../services/movieService";
+import { useMovieContext } from "../contexts/MovieContext";
 
-function MovieCard({ movie, onFavoritesChange }) {
-  const [favorited, setFavorited] = useState(false);
+function MovieCard({ movie }) {
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useMovieContext();
 
-  useEffect(() => {
-    setFavorited(isFavorite(movie.id));
-  }, [movie.id]);
+  const inWatchlist = isInWatchlist(movie.id);
 
-  function handleFavoriteClick() {
-    if (favorited) {
-      removeFavorite(movie.id);
-      setFavorited(false);
+  function handleClick() {
+    if (inWatchlist) {
+      removeFromWatchlist(movie.id);
     } else {
-      saveFavorite(movie);
-      setFavorited(true);
-    }
-
-    if (onFavoritesChange) {
-      onFavoritesChange();
+      addToWatchlist(movie);
     }
   }
 
@@ -42,17 +29,15 @@ function MovieCard({ movie, onFavoritesChange }) {
             ⭐ {movie.vote_average?.toFixed(1)}
           </span>
           <span className="movie-year">
-            {movie.release_date
-              ? movie.release_date.substring(0, 4)
-              : "N/A"}
+            {movie.release_date ? movie.release_date.substring(0, 4) : "N/A"}
           </span>
         </div>
 
         <button
-          className={`favorite-button ${favorited ? "favorited" : ""}`}
-          onClick={handleFavoriteClick}
+          className={`favorite-button ${inWatchlist ? "favorited" : ""}`}
+          onClick={handleClick}
         >
-          {favorited ? "♥ Remove from Favorites" : "♡ Add to Favorites"}
+          {inWatchlist ? "♥ Remove from Watchlist" : "♡ Add to Watchlist"}
         </button>
       </div>
     </div>

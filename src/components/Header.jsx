@@ -9,7 +9,6 @@ function Header({ setSearchResults }) {
     const value = e.target.value;
     setQuery(value);
 
-    // If the search box is empty, go back to popular movies
     if (value.trim() === "") {
       setSearchResults(null);
       return;
@@ -17,20 +16,18 @@ function Header({ setSearchResults }) {
 
     try {
       const data = await searchMovies(value);
-      setSearchResults(data.results); // just the array of movies
+      setSearchResults(data.results);
     } catch (err) {
       console.error("Search failed:", err);
       setSearchResults([]);
     }
   }
 
-  // Optional: also search when the button is clicked
   function handleButtonClick() {
     if (query.trim() === "") {
       setSearchResults(null);
       return;
     }
-    // Re-trigger the same logic
     handleSearch({ target: { value: query } });
   }
 
@@ -47,6 +44,9 @@ function Header({ setSearchResults }) {
           </Link>
           <Link to="/favorites" className="nav-link">
             Favorites
+          </Link>
+          <Link to="/watchlist" className="nav-link">
+            Watchlist
           </Link>
         </nav>
 
